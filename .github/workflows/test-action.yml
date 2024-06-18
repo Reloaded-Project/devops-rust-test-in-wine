@@ -1,0 +1,91 @@
+name: Test Build Workflow
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Run daily at midnight
+  workflow_dispatch:
+  push:
+    branches: [ master ]
+    tags:
+      - 'v1'
+      - 'v1-test'
+    paths:
+      - 'action.yml'
+      - '.github/workflows/test-build-workflow.yml'
+  pull_request:
+    branches: [ master ]
+    paths:
+      - 'action.yml'
+      - '.github/workflows/test-build-workflow.yml'
+
+jobs:
+  test-rust-on-wine:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: i686-pc-windows-gnu
+            rust-toolchain: stable
+          - os: ubuntu-latest
+            target: x86_64-pc-windows-gnu
+            rust-toolchain: stable
+          - os: ubuntu-latest
+            target: i686-pc-windows-gnu
+            rust-toolchain: beta
+          - os: ubuntu-latest
+            target: x86_64-pc-windows-gnu
+            rust-toolchain: beta
+          - os: ubuntu-latest
+            target: i686-pc-windows-gnu
+            rust-toolchain: nightly
+          - os: ubuntu-latest
+            target: x86_64-pc-windows-gnu
+            rust-toolchain: nightly
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout Test Repository
+        uses: actions/checkout@v4
+        with:
+          repository: Sewer56/prs-rs
+          ref: d08599ed5473616f57d57a0966939e1a5dbda9b4
+      - name: Test Rust on Wine
+        uses: Reloaded-Project/devops-rust-test-in-wine@v1
+        with:
+          target: ${{ matrix.target }}
+          rust-toolchain: ${{ matrix.rust-toolchain }}
+
+  test-extra-flags:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Test Repository
+        uses: actions/checkout@v4
+        with:
+          repository: Sewer56/prs-rs
+          ref: d08599ed5473616f57d57a0966939e1a5dbda9b4
+      - name: Test with Extra Build Flags
+        uses: Reloaded-Project/devops-rust-test-in-wine@v1
+        with:
+          target: i686-pc-windows-gnu
+          rust-toolchain: stable
+          extra-build-flags: --features="c-exports"
+      - name: Test with Extra Test Flags
+        uses: Reloaded-Project/devops-rust-test-in-wine@v1
+        with:
+          target: x86_64-pc-windows-gnu
+          rust-toolchain: stable
+          extra-test-flags: --nocapture
+
+  test-custom-project-path:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Test Repository
+        uses: actions/checkout@v4
+        with:
+          repository: Sewer56/prs-rs
+          ref: d08599ed5473616f57d57a0966939e1a5dbda9b4
+      - name: Test with Custom Project Path
+        uses: Reloaded-Project/devops-rust-test-in-wine@v1
+        with:
+          rust-project-path: tools/cli
+          target: i686-pc-windows-gnu
+          rust-toolchain: stable

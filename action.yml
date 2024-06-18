@@ -1,0 +1,39 @@
+name: 'Test Rust Package on Wine'
+description: 'Run Rust tests for a single target in a Wine environment'
+
+inputs:
+  rust-project-path:
+    description: 'Path to the Rust project'
+    required: false
+    default: '.'
+  rust-toolchain:
+    description: 'Rust toolchain to use (nightly, stable, beta).'
+    required: true
+    default: 'stable'
+  target:
+    description: 'The target platform for the Rust compiler. Available targets that use Wine: i686-pc-windows-gnu, x86_64-pc-windows-gnu'
+    required: true
+  extra-test-flags:
+    description: 'Extra flags to pass to the `cross test` command.'
+    required: false
+    default: ''
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Rust Caching
+      uses: Swatinem/rust-cache@v2
+      with:
+        key: ${{ inputs.target }}
+        cache-on-failure: true
+
+    - name: Install Cross Compiler
+      shell: bash
+      run: |
+        cargo install cross --git https://github.com/cross-rs/cross
+
+    - name: Test
+      shell: bash
+      working-directory: ${{ inputs.rust-project-path }}
+      run: |
+        cross +${{ inputs.rust-toolchain }} test --target ${{ inputs.target }} ${{ inputs.extra-test-flags }}
