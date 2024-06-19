@@ -51,7 +51,8 @@ The action supports the following inputs:
 
 - `rust-project-path` (optional): Path to the Rust project. Default: `.`
 - `rust-toolchain` (required): Rust toolchain to use (stable, beta, nightly). Default: `stable`
-- `target` (required): The target platform for the Rust compiler. Available targets that use Wine: `i686-pc-windows-gnu`, `x86_64-pc-windows-gnu`
+- `target` (required): The target platform for the Rust compiler.
+    - Targets that use Wine: `i686-pc-windows-gnu`, `x86_64-pc-windows-gnu`
 - `extra-test-flags` (optional): Extra flags to pass to the `cross test` command. Default: `''`
 
 ## Example Workflow
@@ -72,7 +73,7 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       
     - name: Test on Wine (x86)
       uses: Reloaded-Project/devops-rust-test-in-wine@v1
@@ -87,6 +88,8 @@ jobs:
 
 This workflow runs the tests on both x86 and x64 Windows targets using different
 Rust toolchains and custom build/test flags.
+
+This action should be ran from one of the Linux runners, e.g. `ubuntu-latest`.
 
 ## License
 
