@@ -43,7 +43,6 @@ steps:
       target: i686-pc-windows-gnu
       rust-toolchain: stable
       extra-build-flags: --features="feature1 feature2"
-      extra-test-flags: --nocapture
 ```
 
 ### Inputs
