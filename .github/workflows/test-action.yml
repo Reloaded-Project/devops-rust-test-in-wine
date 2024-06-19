@@ -46,8 +46,8 @@ jobs:
       - name: Checkout Test Repository
         uses: actions/checkout@v4
         with:
-          repository: Sewer56/prs-rs
-          ref: d08599ed5473616f57d57a0966939e1a5dbda9b4
+          repository: Sewer56/nanokit-rs
+          ref: 4f946d88d5ef3f59985d5d4c4b3385c9914829b2
       - name: Test Rust on Wine
         uses: Reloaded-Project/devops-rust-test-in-wine@v1
         with:
@@ -60,20 +60,14 @@ jobs:
       - name: Checkout Test Repository
         uses: actions/checkout@v4
         with:
-          repository: Sewer56/prs-rs
-          ref: d08599ed5473616f57d57a0966939e1a5dbda9b4
-      - name: Test with Extra Build Flags on i686
+          repository: Sewer56/nanokit-rs
+          ref: 4f946d88d5ef3f59985d5d4c4b3385c9914829b2
+      - name: Test with Extra Test Flags on x86_64
         uses: Reloaded-Project/devops-rust-test-in-wine@v1
         with:
           target: i686-pc-windows-gnu
           rust-toolchain: stable
-          extra-build-flags: --features="c-exports"
-      - name: Test with Extra Test Flags on x86_64
-        uses: Reloaded-Project/devops-rust-test-in-wine@v1
-        with:
-          target: x86_64-pc-windows-gnu
-          rust-toolchain: stable
-          extra-test-flags: --nocapture
+          extra-test-flags: --features "no-inline-concat"
 
   test-custom-project-path:
     runs-on: ubuntu-latest
@@ -81,11 +75,12 @@ jobs:
       - name: Checkout Test Repository
         uses: actions/checkout@v4
         with:
-          repository: Sewer56/prs-rs
-          ref: d08599ed5473616f57d57a0966939e1a5dbda9b4
+          repository: Sewer56/nanokit-rs
+          ref: 4f946d88d5ef3f59985d5d4c4b3385c9914829b2
+          path: custom-path
       - name: Test with Custom Project Path
         uses: Reloaded-Project/devops-rust-test-in-wine@v1
         with:
-          rust-project-path: tools/cli
+          rust-project-path: custom-path
           target: i686-pc-windows-gnu
           rust-toolchain: stable
