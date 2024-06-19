@@ -19,7 +19,7 @@ on:
       - '.github/workflows/test-build-workflow.yml'
 
 jobs:
-  test-rust-on-wine:
+  test-rust-on-wine-all-configs:
     strategy:
       matrix:
         include:
@@ -62,13 +62,13 @@ jobs:
         with:
           repository: Sewer56/prs-rs
           ref: d08599ed5473616f57d57a0966939e1a5dbda9b4
-      - name: Test with Extra Build Flags
+      - name: Test with Extra Build Flags on i686
         uses: Reloaded-Project/devops-rust-test-in-wine@v1
         with:
           target: i686-pc-windows-gnu
           rust-toolchain: stable
           extra-build-flags: --features="c-exports"
-      - name: Test with Extra Test Flags
+      - name: Test with Extra Test Flags on x86_64
         uses: Reloaded-Project/devops-rust-test-in-wine@v1
         with:
           target: x86_64-pc-windows-gnu
