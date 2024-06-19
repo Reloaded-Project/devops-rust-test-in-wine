@@ -1,5 +1,8 @@
 name: 'Test Rust Package on Wine'
 description: 'Run Rust tests for a single target in a Wine environment'
+branding:
+  icon: 'check-square'
+  color: 'red'
 
 inputs:
   rust-project-path:
